@@ -1,0 +1,23 @@
+syntax = "proto3";
+option go_package = "github.com/samsapti/sec1-handin-02/grpc";
+
+service DiceGame {
+    rpc SendCommitment (Commitment) returns (Empty) {}
+    rpc SendCommitmentKey (CommitmentKey) returns (Empty) {}
+    rpc SendThrow (DieThrow) returns (Empty) {}
+}
+
+message Commitment {
+    uint32 c = 1;
+}
+
+message CommitmentKey {
+    uint32 m = 1;
+    uint32 r = 2;
+}
+
+message DieThrow {
+    uint32 val = 1;
+}
+
+message Empty {}
