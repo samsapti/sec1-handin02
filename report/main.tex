@@ -28,6 +28,17 @@
         \item Digitally sign each message (authenticity).
         \item Key exchange to establish symmetric encryption scheme (TLS).
         \item Self-sign certificates.
+        \item ALTS: \url{https://grpc.io/docs/languages/go/alts/}
     \end{itemize}
+
+    Protocol steps:
+
+    \begin{enumerate}
+        \item Alice and Bob does an authenticated key exchange to obtain a
+        shared symmetric encryption key.
+        \item Alice and Bob does coin tossing with Pedersen commitments.
+        \item Each message is encrypted using the shared symmetric key, and
+        signed.
+    \end{enumerate}
 
 \end{document}
