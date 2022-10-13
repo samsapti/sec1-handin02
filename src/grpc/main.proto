@@ -4,7 +4,7 @@ option go_package = "github.com/samsapti/sec1-handin-02/grpc";
 service DiceGame {
     rpc SendCommitment (Commitment) returns (Empty) {}
     rpc SendCommitmentKey (CommitmentKey) returns (Empty) {}
-    rpc SendThrow (DieThrow) returns (Empty) {}
+    rpc SendDieThrow (DieThrow) returns (Empty) {}
 }
 
 message Commitment {

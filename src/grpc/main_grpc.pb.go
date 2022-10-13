@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type DiceGameClient interface {
 	SendCommitment(ctx context.Context, in *Commitment, opts ...grpc.CallOption) (*Empty, error)
 	SendCommitmentKey(ctx context.Context, in *CommitmentKey, opts ...grpc.CallOption) (*Empty, error)
-	SendThrow(ctx context.Context, in *DieThrow, opts ...grpc.CallOption) (*Empty, error)
+	SendDieThrow(ctx context.Context, in *DieThrow, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type diceGameClient struct {
@@ -49,9 +49,9 @@ func (c *diceGameClient) SendCommitmentKey(ctx context.Context, in *CommitmentKe
 	return out, nil
 }
 
-func (c *diceGameClient) SendThrow(ctx context.Context, in *DieThrow, opts ...grpc.CallOption) (*Empty, error) {
+func (c *diceGameClient) SendDieThrow(ctx context.Context, in *DieThrow, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/DiceGame/SendThrow", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/DiceGame/SendDieThrow", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (c *diceGameClient) SendThrow(ctx context.Context, in *DieThrow, opts ...gr
 type DiceGameServer interface {
 	SendCommitment(context.Context, *Commitment) (*Empty, error)
 	SendCommitmentKey(context.Context, *CommitmentKey) (*Empty, error)
-	SendThrow(context.Context, *DieThrow) (*Empty, error)
+	SendDieThrow(context.Context, *DieThrow) (*Empty, error)
 	mustEmbedUnimplementedDiceGameServer()
 }
 
@@ -78,8 +78,8 @@ func (UnimplementedDiceGameServer) SendCommitment(context.Context, *Commitment) 
 func (UnimplementedDiceGameServer) SendCommitmentKey(context.Context, *CommitmentKey) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendCommitmentKey not implemented")
 }
-func (UnimplementedDiceGameServer) SendThrow(context.Context, *DieThrow) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendThrow not implemented")
+func (UnimplementedDiceGameServer) SendDieThrow(context.Context, *DieThrow) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendDieThrow not implemented")
 }
 func (UnimplementedDiceGameServer) mustEmbedUnimplementedDiceGameServer() {}
 
@@ -130,20 +130,20 @@ func _DiceGame_SendCommitmentKey_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DiceGame_SendThrow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _DiceGame_SendDieThrow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DieThrow)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DiceGameServer).SendThrow(ctx, in)
+		return srv.(DiceGameServer).SendDieThrow(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DiceGame/SendThrow",
+		FullMethod: "/DiceGame/SendDieThrow",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DiceGameServer).SendThrow(ctx, req.(*DieThrow))
+		return srv.(DiceGameServer).SendDieThrow(ctx, req.(*DieThrow))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -164,8 +164,8 @@ var DiceGame_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DiceGame_SendCommitmentKey_Handler,
 		},
 		{
-			MethodName: "SendThrow",
-			Handler:    _DiceGame_SendThrow_Handler,
+			MethodName: "SendDieThrow",
+			Handler:    _DiceGame_SendDieThrow_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
