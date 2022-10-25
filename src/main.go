@@ -134,15 +134,10 @@ func main() {
 	// Wait for peer to come online
 	time.Sleep(2 * time.Second)
 
-	/*
-		Game loop starts here
-	*/
-
+	// Main game loop
 	for i := 0; i < rounds; i++ {
-		log.Printf("Round %d\n", i+1)
-
 		if starts {
-			log.Printf("%s starts this round", *name)
+			log.Printf("%s starts round %d\n", *name, i+1)
 		}
 
 		throw, err := rand.Int(rand.Reader, big.NewInt(5))
@@ -163,7 +158,7 @@ func main() {
 			if err != nil {
 				log.Fatalf("Error: %s\n", err)
 			}
-			log.Printf("%s receives die throw: %d\n", *name, peerThrow.Val)
+			log.Printf("%s receives peer's die throw: %d\n", *name, peerThrow.Val)
 
 			// Send opening to peer
 			log.Printf("%s sends opening: (m: %d, r: %d)\n", *name, m, r)
@@ -180,21 +175,16 @@ func main() {
 				os.Exit(1)
 			}
 
-			// Check winner
-			if m > peerThrow.Val {
-				log.Printf("%s won this round!\n", *name)
-			} else if m < peerThrow.Val {
-				log.Printf("%s lost this round!\n", *name)
-			} else {
-				log.Println("It's a tie!")
-			}
+			// Compute result
+			res := m ^ peerThrow.Val
+			log.Printf("%s computes final die throw value: %d\n", *name, res)
 		} else {
 			// Wait for commitment from peer
 			commitment := <-commChan
 			log.Printf("%s receives commitment: %d\n", *name, commitment.C)
 
 			throwChan <- &pb.DieThrow{Val: m}
-			log.Printf("%s sends die throw: %d", *name, m)
+			log.Printf("%s sends their die throw: %d\n", *name, m)
 
 			opening := <-openingChan
 			log.Printf("%s receives opening: (m: %d, r: %d)\n", *name, opening.M, opening.R)
@@ -210,20 +200,13 @@ func main() {
 				os.Exit(1)
 			}
 
-			// Check winner
-			if m > opening.M {
-				log.Printf("%s won this round!\n", *name)
-			} else if m < opening.M {
-				log.Printf("%s lost this round!\n", *name)
-			} else {
-				log.Println("It's a tie!")
-			}
+			// Compute result
+			res := m ^ opening.M
+			log.Printf("%s computes final die throw value: %d\n", *name, res)
 		}
 
 		// Switch turns
 		starts = !starts
 		time.Sleep(time.Second)
 	}
-
-	time.Sleep(time.Second)
 }
