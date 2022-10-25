@@ -21,24 +21,39 @@
 \begin{document}
     \maketitle
 
-    \begin{itemize}
-        \item Pedersen commitments, Alice and Bob first send \texttt{c}, then
-        each of them send \texttt{r,m} (confidentiality and integrity). Coin
-        tossing protocol.
-        \item Digitally sign each message (authenticity).
-        \item Key exchange to establish symmetric encryption scheme (TLS).
-        \item Self-sign certificates.
-        \item ALTS: \url{https://grpc.io/docs/languages/go/alts/}
-    \end{itemize}
+    \section*{Part 1}
 
-    Protocol steps:
+    To solve the problem at hand, the following protocol can be used:
 
     \begin{enumerate}
-        \item Alice and Bob does an authenticated key exchange to obtain a
-        shared symmetric encryption key.
-        \item Alice and Bob does coin tossing with Pedersen commitments.
-        \item Each message is encrypted using the shared symmetric key, and
-        signed.
+        \item Alice and Bob agree on a cyclic group $(\mathbb{Z}^*_p, \cdot)$
+        with generators $g$ and $h$.
+        \item Using Pedersen commitments, Alice samples a random $r \in
+        \mathbb{Z}^*_p$ and a die throw $m$, and sends commitment $c = C(m, r)$ to
+        Bob.
+        \item Bob sends a die throw $t$ to Alice.
+        \item Alice sends $(m, r)$ to Bob, who then verifies that $c = C(m, r)$.
+        \item Alice and Bob each compute the final value $m \text{ XOR } t$.
     \end{enumerate}
+
+    To ensure confidentiality, integrity and authenticity, a secure channel is
+    established with mutual TLS (mTLS), meaning that both communicating parties
+    authenticate themselves with certificates. For the purposes of this
+    assignment, I will be using self-signed certificates instead of signing
+    them by a certificate authority (CA).
+
+    \section*{Part 2}
+
+    TLS is used as a key exchange protocol to obtain a shared symmetric key for
+    encryption. This is to ensure confidentiality. Furthermore, with mTLS, both
+    parties authenticate themselves with their personal certificates. This part
+    ensures authenticity from both sides. Lastly, as part of the TLS protocol,
+    each message is sent along with a message authentication code (MAC). This
+    ensures integrity. It also ensures authenticity, as only the parties
+    participating in the key exchange will be able to create the MACs.
+    
+    The commitments ensure that no party can cheat with their die throw. Each
+    party can send their die throw without first learning the other party's
+    throw, such that no party has any influence on the final result.
 
 \end{document}
