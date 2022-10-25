@@ -4,7 +4,7 @@ COPY . /app
 WORKDIR /app
 
 RUN go mod download
-RUN GOOS=linux CGO_ENABLED=0 go build -a -tags netgo -ldflags '-w' -o main .
+RUN GOOS=linux CGO_ENABLED=0 go build -ldflags '-w' -o main .
 
 FROM scratch
 

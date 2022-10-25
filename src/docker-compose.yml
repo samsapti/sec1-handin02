@@ -2,7 +2,6 @@ version: "3.9"
 
 services:
   alice:
-    image: diceplayer
     container_name: alice
     build:
       context: .
@@ -13,7 +12,6 @@ services:
       - "-peer_addr=bob:50052"
 
   bob:
-    image: diceplayer
     container_name: bob
     build:
       context: .
