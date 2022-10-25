@@ -5,7 +5,7 @@ services:
     container_name: alice
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     command:
       - "-name=Alice"
       - "-addr=0.0.0.0:50051"
@@ -15,7 +15,7 @@ services:
     container_name: bob
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     command:
       - "-name=Bob"
       - "-addr=0.0.0.0:50052"
