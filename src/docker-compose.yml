@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  alice:
+    image: diceplayer
+    container_name: alice
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command:
+      - "-name=Alice"
+      - "-addr=0.0.0.0:50051"
+      - "-peer_addr=bob:50052"
+
+  bob:
+    image: diceplayer
+    container_name: bob
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    command:
+      - "-name=Bob"
+      - "-addr=0.0.0.0:50052"
+      - "-peer_addr=alice:50051"

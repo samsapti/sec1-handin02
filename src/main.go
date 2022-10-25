@@ -222,7 +222,8 @@ func main() {
 
 		// Switch turns
 		starts = !starts
+		time.Sleep(time.Second)
 	}
 
-	time.Sleep(2 * time.Second)
+	time.Sleep(time.Second)
 }
