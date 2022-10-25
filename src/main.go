@@ -177,7 +177,7 @@ func main() {
 
 			// Compute result
 			res := m ^ peerThrow.Val
-			log.Printf("%s computes final die throw value: %d\n", *name, res)
+			log.Printf("%s computes final value: %d\n", *name, res)
 		} else {
 			// Wait for commitment from peer
 			commitment := <-commChan
@@ -202,7 +202,7 @@ func main() {
 
 			// Compute result
 			res := m ^ opening.M
-			log.Printf("%s computes final die throw value: %d\n", *name, res)
+			log.Printf("%s computes final value: %d\n", *name, res)
 		}
 
 		// Switch turns
