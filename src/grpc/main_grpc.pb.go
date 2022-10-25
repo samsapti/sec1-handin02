@@ -18,9 +18,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DiceGameClient interface {
-	SendCommitment(ctx context.Context, in *Commitment, opts ...grpc.CallOption) (*Empty, error)
-	SendCommitmentKey(ctx context.Context, in *CommitmentKey, opts ...grpc.CallOption) (*Empty, error)
-	SendDieThrow(ctx context.Context, in *DieThrow, opts ...grpc.CallOption) (*Empty, error)
+	SendCommitment(ctx context.Context, in *Commitment, opts ...grpc.CallOption) (*DieThrow, error)
+	SendOpening(ctx context.Context, in *Opening, opts ...grpc.CallOption) (*Acknowledgement, error)
 }
 
 type diceGameClient struct {
@@ -31,8 +30,8 @@ func NewDiceGameClient(cc grpc.ClientConnInterface) DiceGameClient {
 	return &diceGameClient{cc}
 }
 
-func (c *diceGameClient) SendCommitment(ctx context.Context, in *Commitment, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
+func (c *diceGameClient) SendCommitment(ctx context.Context, in *Commitment, opts ...grpc.CallOption) (*DieThrow, error) {
+	out := new(DieThrow)
 	err := c.cc.Invoke(ctx, "/DiceGame/SendCommitment", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -40,18 +39,9 @@ func (c *diceGameClient) SendCommitment(ctx context.Context, in *Commitment, opt
 	return out, nil
 }
 
-func (c *diceGameClient) SendCommitmentKey(ctx context.Context, in *CommitmentKey, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/DiceGame/SendCommitmentKey", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *diceGameClient) SendDieThrow(ctx context.Context, in *DieThrow, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/DiceGame/SendDieThrow", in, out, opts...)
+func (c *diceGameClient) SendOpening(ctx context.Context, in *Opening, opts ...grpc.CallOption) (*Acknowledgement, error) {
+	out := new(Acknowledgement)
+	err := c.cc.Invoke(ctx, "/DiceGame/SendOpening", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -62,9 +52,8 @@ func (c *diceGameClient) SendDieThrow(ctx context.Context, in *DieThrow, opts ..
 // All implementations must embed UnimplementedDiceGameServer
 // for forward compatibility
 type DiceGameServer interface {
-	SendCommitment(context.Context, *Commitment) (*Empty, error)
-	SendCommitmentKey(context.Context, *CommitmentKey) (*Empty, error)
-	SendDieThrow(context.Context, *DieThrow) (*Empty, error)
+	SendCommitment(context.Context, *Commitment) (*DieThrow, error)
+	SendOpening(context.Context, *Opening) (*Acknowledgement, error)
 	mustEmbedUnimplementedDiceGameServer()
 }
 
@@ -72,14 +61,11 @@ type DiceGameServer interface {
 type UnimplementedDiceGameServer struct {
 }
 
-func (UnimplementedDiceGameServer) SendCommitment(context.Context, *Commitment) (*Empty, error) {
+func (UnimplementedDiceGameServer) SendCommitment(context.Context, *Commitment) (*DieThrow, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendCommitment not implemented")
 }
-func (UnimplementedDiceGameServer) SendCommitmentKey(context.Context, *CommitmentKey) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendCommitmentKey not implemented")
-}
-func (UnimplementedDiceGameServer) SendDieThrow(context.Context, *DieThrow) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendDieThrow not implemented")
+func (UnimplementedDiceGameServer) SendOpening(context.Context, *Opening) (*Acknowledgement, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendOpening not implemented")
 }
 func (UnimplementedDiceGameServer) mustEmbedUnimplementedDiceGameServer() {}
 
@@ -112,38 +98,20 @@ func _DiceGame_SendCommitment_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DiceGame_SendCommitmentKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CommitmentKey)
+func _DiceGame_SendOpening_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Opening)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DiceGameServer).SendCommitmentKey(ctx, in)
+		return srv.(DiceGameServer).SendOpening(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/DiceGame/SendCommitmentKey",
+		FullMethod: "/DiceGame/SendOpening",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DiceGameServer).SendCommitmentKey(ctx, req.(*CommitmentKey))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DiceGame_SendDieThrow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DieThrow)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DiceGameServer).SendDieThrow(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/DiceGame/SendDieThrow",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DiceGameServer).SendDieThrow(ctx, req.(*DieThrow))
+		return srv.(DiceGameServer).SendOpening(ctx, req.(*Opening))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -160,12 +128,8 @@ var DiceGame_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DiceGame_SendCommitment_Handler,
 		},
 		{
-			MethodName: "SendCommitmentKey",
-			Handler:    _DiceGame_SendCommitmentKey_Handler,
-		},
-		{
-			MethodName: "SendDieThrow",
-			Handler:    _DiceGame_SendDieThrow_Handler,
+			MethodName: "SendOpening",
+			Handler:    _DiceGame_SendOpening_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

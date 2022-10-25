@@ -15,7 +15,7 @@ const (
 func GetR() uint64 {
 	r, err := rand.Int(rand.Reader, big.NewInt(int64(p-1)))
 	if err != nil {
-		log.Fatalf("Error: %v\n", err)
+		log.Fatalf("Error: %s\n", err)
 	}
 
 	return r.Uint64()
